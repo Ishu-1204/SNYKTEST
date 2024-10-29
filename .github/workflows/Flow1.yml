@@ -17,8 +17,8 @@ jobs:
         run: cat snyk.sarif
       - name: Total No. of Security Issues
         run: |
-             Length=$(cat snyk.sarif | jq '.runs[0].results | length')
-             echo "Results_Length=$Results_Length" >> $GITHUB_ENV
+             length=$(cat snyk.sarif | jq '.runs[0].results | length')
+             echo "Results_Length=$length" >> $GITHUB_ENV
       - name: Send notification to Slack 
         uses: slackapi/slack-github-action@v1.24.0
         if: always()
