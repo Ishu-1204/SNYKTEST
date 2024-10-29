@@ -19,3 +19,13 @@ jobs:
         run: |
              Length=$(cat snyk.sarif | jq '.runs[0].results | length')
              echo "Results_Length=$Results_Length" >> $GITHUB_ENV
+      - name: Send notification to Slack 
+        uses: slackapi/slack-github-action@v1.24.0
+        if: always(0)
+        with:  
+            payload: |
+                  {
+                    "text": "*The Synk scan result for repo is : ${{ job.status }}* \n*Number of Vulnerabilities : ${{ env.Results_Length }}* \n*Detail*: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
+        env: 
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }}
