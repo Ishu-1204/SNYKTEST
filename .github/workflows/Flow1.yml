@@ -21,7 +21,7 @@ jobs:
              echo "Results_Length=$Results_Length" >> $GITHUB_ENV
       - name: Send notification to Slack 
         uses: slackapi/slack-github-action@v1.24.0
-        if: always(0)
+        if: always()
         with:  
             payload: |
                   {
