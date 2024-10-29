@@ -14,7 +14,7 @@ def make_http_request(url, method='GET', data=None):
     Returns:
         response (requests.Response): The response object from the request.
     """
-    token = "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"
+    token = "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"
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
     try:
         if method == 'GET':
