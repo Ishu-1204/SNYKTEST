@@ -1,0 +1,30 @@
+name: Example workflow for Python using Snyk
+on: push
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@rdkcentral/firebolt-certification-app
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/python@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: code test
+          args: --sarif-file-output=snyk.sarif
+      - name: Print the Snyk SARIF file 
+        run: cat snyk.sarif
+      - name: Total No. of Security Issues
+        run: |
+             length=$(cat snyk.sarif | jq '.runs[0].results | length')
+             echo "Results_Length=$length" >> $GITHUB_ENV
+      - name: Send notification to Slack 
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "*The Snyk scan result for repo is : ${{ job.status }}* \n*Number of Vulnerabilities : ${{ env.Results_Length }}* \n*Detail*: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
